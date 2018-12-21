@@ -74,9 +74,11 @@ public class Golf {
 	
 	public static void main( String[] args ){
 		
-		double distanceToCup = 500;					//Start value: distance to cup is 500 meters
+		double distanceToCup = 300;					//Start value: distance to cup is 300 meters
 		double velocity, angle;
+		double [] distance = new double [5];
 		boolean valid;
+		
 		
 		/*********************
 		 * Welcome - message *
@@ -94,31 +96,28 @@ public class Golf {
 	
 		
 		while (valid) {								// Player wants to play Golf
+			System.out.println("Distance to the cup is: " + distanceToCup + " meters.");
+			
 			for (int i = 0; i < 5; i++) {
-				System.out.println("Distance to the cup is: " + distanceToCup + " meters.");
-				System.out.println("Enter your velocity (m/s):");				
+				int swing = i + 1;
+				System.out.println("Swing no " + (swing) + ": Enter your velocity (m/s):");				
 				velocity = getDoubleFromUser();
 			
 				System.out.println("Enter your angle");				
 				angle = getDoubleFromUser();
 			
-				double distance = calculateDistance(velocity, angle); 	//Calculate distance
-				distance = roundDecimalNumber(distance); 	//Rounding the decimal number
+				distance[i] = calculateDistance(velocity, angle); 	//Calculate distance
+				distance[i] = roundDecimalNumber(distance[i]); 	//Rounding the decimal number
+				System.out.println("The length of your swing was: " + distance[i] + " meters");
 			
-				distanceToCup = distanceToCup - distance;
-				System.out.println("Distance to the cup after swing no: " + i + " is " + distanceToCup + " meters.");
+				distanceToCup = roundDecimalNumber(distanceToCup - distance[i]);
+				distanceToCup = Math.abs(distanceToCup);
+				System.out.println("Distance to the cup after swing no: " + (swing) + " is " + distanceToCup + " meters.");
 			}
-		
-		}											// Player do NOT want to play Golf
+		valid = false;
+		}											// Player do NOT want to play
 		System.out.println("Welcome back!");
 	
-			
-			//double a = - 5.35;
-			//a = Math.abs(a);		//Creates an absolute value of the variable, i.e no "-".
-			
-			
-			
-			//System.out.println("Distance to the cup after swing no: " + i + " is " + distanceToCup + " meters.");
 		}    
 }
 
