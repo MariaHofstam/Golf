@@ -14,22 +14,8 @@ public class GolfTest {
 		
 		double expectedDistance = 320;
 		
-		assertEquals(expectedDistance, Golf.getDistance(givenVelocity, givenAngle), 0);
-	}
-	
-	@Test
-	public void test_angleValid_89_and_1() {
-		double highestAngle = 89;
-		double lowestAngle = 1;
-		
-		assertTrue(Golf.angleValid(lowestAngle) & Golf.angleValid(highestAngle));
-	}
-	
-	@Test
-	public void test_badValues_return_false() {
-		double badvalueLow = 0;
-		double badValueHigh = 90;
-		
-		assertFalse(Golf.angleValid(badvalueLow) & Golf.angleValid(badValueHigh));
+		assertEquals(expectedDistance, Golf.calculateDistance(givenVelocity, givenAngle), 0);
 	}
 }
+	
+	

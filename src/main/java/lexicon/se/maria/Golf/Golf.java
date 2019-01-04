@@ -11,31 +11,45 @@ import java.util.Scanner;
  * as well as the distance to the cup. 
  * If the ball travels beyond the cup, the new distance should still be positive. 
  * When the ball has reached the goal, the game should end, displaying all swings taken, 
- * and how far the ball travelled each time. 
+ * and how far the ball traveled each time. 
  * If the ball moves too far away from the cup, the game should generate an error that 
  * takes you out of the game loop, with a failure message. 
  * If too many swings have been taken, the game should end, with a different failure message.
  */
 
 public class Golf {
+	
 	private static Scanner scanner = new Scanner(System.in);
 	
-	private static String getStringFromUser() {					//method getStringFromUser	
-		String text = scanner.nextLine();
-		return text;}
+	public static boolean menu () {									//method: menu
+		boolean valid = false;
+		System.out.println("\n******************************");
+		System.out.println("* Do you want to play? (Y/N) *");
+		System.out.println("******************************");
+		String golf = getStringFromUser();						
+	return valid = playing(golf);
+	}
 	
-	public static boolean playing(String answer) {				//method Y/N
-		String upperCaseString = answer.toUpperCase();			//String to Upper Case
+	public static boolean playing(String answer) {					//method Y/N
+		String upperCaseString = answer.toUpperCase();				//String to Upper Case
 		switch(upperCaseString) {
 			case "Y":
+				double distanceToCup = 300;	//Start value: distance to cup is 300 meters
+				System.out.println("The Golf game consists of maximum 7 swings");
+				System.out.println("If the ball moves too far away from the cup, the game ends \n");
+				System.out.println("Distance to the cup is 300 meters.");
 				return true;
 			default:
 				return false;
 		}
 	}	
 	
-	private static double getDoubleFromUser() {						//method getDoubleFromUser
-		
+	private static String getStringFromUser() {						//method: getStringFromUser	
+		String text = scanner.nextLine();
+	return text;
+	}
+	
+	private static double getDoubleFromUser() {						//method: getDoubleFromUser
 		boolean valid = false;
 		double number = 0;
 		while(!valid) {
@@ -46,78 +60,82 @@ public class Golf {
 				System.out.println("Input was not a number");
 			}
 		}
-		return number;
+	return number;
 	}
 	
-	public static double roundDecimalNumber(double decimalNr) {	//method: rounding a decimal number
+	public static double roundDecimalNumber(double decimalNr) {		//method: rounding a decimal number
 		double roundedNr = Math.round(decimalNr * 10.0)/10.0;
-		return roundedNr;
+	return roundedNr;
 	}
 	
-	public static double angleInRadians(double angle) {			//method: calculate angle in radians
-		double angInRad = (Math.PI/180) * angle;
-		return angInRad;
+	public static double swing (int i) {							//method for a swing, return distance
+		double [] distance = new double [7];
+		System.out.println("Swing no " + (i+1) + ": Enter your velocity (m/s):");				
+		double velocity = getDoubleFromUser();
+		System.out.println("Enter your angle");				
+		double angle = getDoubleFromUser();
+	return distance[i] = calculateDistance(velocity, angle); 	//Calculate distance
 	}
 	
 	public static double calculateDistance(double velocity, double angle) {		//method: calculate distance
 		//Distance: Math.pow(velocity, 2) / GRAVITY * Math.sin(2 * angleInRadians)	
-		
 		double powerOf2 = 2;
 		double gravity = 9.8;
-		
 		double powOf = Math.pow(velocity, powerOf2);			//velocity^2
 		double angleRad = angleInRadians(angle);
 		double distance = (powOf/gravity) * Math.sin(2 * angleRad);
-		
-		return distance;
+	return distance;
 	}
 	
+	public static double angleInRadians(double angle) {				//method: calculate angle in radians
+		double angInRad = (Math.PI/180) * angle;
+	return angInRad;
+	}
+	
+	//*************************************** MAIN *****************************************************
+	
 	public static void main( String[] args ){
-		
-		double distanceToCup = 300;					//Start value: distance to cup is 300 meters
-		double velocity, angle;
-		double [] distance = new double [5];
+		int i = 0;
+		double distanceToCup = 300;
+		double [] distance = new double [7];
 		boolean valid;
 		
-		
-		/*********************
-		 * Welcome - message *
-		 *********************/	
-		
 		System.out.println("This is a simplified Golf-game");
+		valid = menu();
 		
-		/*********************
-		 * Playing Golf Y/N *
-		 *********************/	
-		
-		System.out.println("Do you want to play? Y/N ");
-		String golf = getStringFromUser();
-		valid = playing(golf);
+		while (valid) {
 	
+				distance[i] = swing (i);
+				distanceToCup = Math.abs(distanceToCup - distance[i]);	//No negative numbers
+				
+				if (distanceToCup <= 0.1) {
+					System.out.println("Congratulations. You won!!!");
+					System.out.println("Your result: \n");
+					int j = i;
+					for (i = 0; i <= j; i++ ) {
+						System.out.println("Swing no " +  (i +1) + ": " + roundDecimalNumber(distance[i]) + " meters");
+					}
+					System.out.println();
+					valid = menu();
+				} else if (distanceToCup > 400){							//Ball moved way too far
+						System.out.println("The ball moved outside of the playing field");
+					valid = menu();
+				} else {
+					System.out.println("The length of your swing was: " + roundDecimalNumber(distance[i]) + " meters");
+					System.out.println("Distance to the cup after swing no: " + (i+1) + " is " + roundDecimalNumber(distanceToCup) + " meters.");
+					i++;
+				}
+			
+				//Too many swings?
+				if (i > 6) {
+					System.out.println("You have used the maximum number of swings");
+					valid = menu();
+				}
+		}
 		
-		while (valid) {								// Player wants to play Golf
-			System.out.println("Distance to the cup is: " + distanceToCup + " meters.");
-			
-			for (int i = 0; i < 5; i++) {
-				int swing = i + 1;
-				System.out.println("Swing no " + (swing) + ": Enter your velocity (m/s):");				
-				velocity = getDoubleFromUser();
-			
-				System.out.println("Enter your angle");				
-				angle = getDoubleFromUser();
-			
-				distance[i] = calculateDistance(velocity, angle); 	//Calculate distance
-				distance[i] = roundDecimalNumber(distance[i]); 	//Rounding the decimal number
-				System.out.println("The length of your swing was: " + distance[i] + " meters");
-			
-				distanceToCup = roundDecimalNumber(distanceToCup - distance[i]);
-				distanceToCup = Math.abs(distanceToCup);
-				System.out.println("Distance to the cup after swing no: " + (swing) + " is " + distanceToCup + " meters.");
-			}
-		valid = false;
-		}											// Player do NOT want to play
+		// Player do NOT want to play or the game has ended
 		System.out.println("Welcome back!");
-	
-		}    
+	}
+	    
 }
 
